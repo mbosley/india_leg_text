@@ -1,3 +1,8 @@
+## build_dir
+.PHONY : build_dir
+build_dir :
+	mkdir -p data/{raw,clean}
+
 ## get_links
 .PHONY : get_links
 get_links : data/raw/links.txt
