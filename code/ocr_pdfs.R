@@ -42,6 +42,15 @@ if (interactive()) {
 ## run ocr
 ocr_out <- ocr(args$pdf_in, engine = tesseract("eng"))
 
+
+# We might want to delete the resulting PNG files from OCR.
+#Otherwise we may end up with thousands of PNG files after looping.
+# If we decide to do that, we can modify and use the following code:
+
+#for(i in 1:length(test)){
+#  file.remove(paste0(args$pdf_in,"_",i,".png"))
+#}
+
 ## convert to table, then save to disk
 tibble(
   collection = get_collection_from_pdf_name(args$pdf_in),
