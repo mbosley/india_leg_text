@@ -46,6 +46,9 @@ ocr_out <- ocr(args$pdf_in, engine = tesseract("eng"))
 # We might want to delete the resulting PNG files from OCR.
 #Otherwise we may end up with thousands of PNG files after looping.
 # If we decide to do that, we can modify and use the following code:
+# [MB]: Good point! I was thinking about handling the PNG removal
+# from the command line. When we have a chance, I'll run you through the
+# data processing pipeline I've been building.
 
 #for(i in 1:length(test)){
 #  file.remove(paste0(args$pdf_in,"_",i,".png"))
