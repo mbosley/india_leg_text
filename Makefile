@@ -4,7 +4,6 @@ include config.mk
 .PHONY : build_dir
 build_dir :
 	mkdir -p data/{raw,clean}
-	mkdir -p data/raw/{cald,icld}
 
 ## get_links : Get the complete set of pdf links from website.
 .PHONY : get_links
@@ -14,16 +13,16 @@ data/raw/links.txt : code/scrape_links.jl
 
 ## download_data : Using the links, download the pdfs
 .PHONY : download_data
-download_data : $(CALD_PDFS)
-data/raw/cald/%.pdf : data/raw/links.txt
+download_data : $(PDFS)
+data/raw/%.pdf : data/raw/links.txt
 	cat $^ | grep $* | xargs curl -l -o $@
 
 ## ocr_data : Use OCR to process the pdfs, saving as csv.
 .PHONY : ocr_data
-ocr_data : $(CALD_CSVS)
-data/raw/cald/%.csv : code/ocr_pdfs.R data/raw/cald/%.pdf
+ocr_data : $(CSVS)
+data/raw/%.csv : code/ocr_pdfs.R data/raw/%.pdf
 	Rscript $^ $@
-	rm -f *.png
+	rm -f $(basename $@_*).png
 
 ## clean : Remove all data files generated from makefile.
 .PHONY : clean
