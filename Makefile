@@ -22,7 +22,6 @@ data/raw/%.pdf : code/download_data.sh data/raw/links.txt
 ocr_data : $(CSVS)
 data/raw/%.csv : code/ocr_pdfs.R data/raw/%.pdf
 	Rscript $^ $@
-	rm -f $(basename $@_*).png
 
 ## clean : Remove all data files generated from makefile.
 .PHONY : clean
