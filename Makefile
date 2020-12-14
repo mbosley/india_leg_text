@@ -15,13 +15,13 @@ data/raw/links.txt : code/scrape_links.jl
 .PHONY : download_data
 download_data : $(PDFS)
 data/raw/%.pdf : code/download_data.sh data/raw/links.txt
-	sh $^ $* $@
+	$(GET_DATA)
 
 ## ocr_data : Use OCR to process the pdfs, saving as csv.
 .PHONY : ocr_data
 ocr_data : $(CSVS)
 data/raw/%.csv : code/ocr_pdfs.R data/raw/%.pdf
-	Rscript $^ $@
+	$(OCR)
 
 ## clean : Remove all data files generated from makefile.
 .PHONY : clean
