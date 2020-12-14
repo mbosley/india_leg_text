@@ -14,8 +14,8 @@ data/raw/links.txt : code/scrape_links.jl
 ## download_data : Using the links, download the pdfs
 .PHONY : download_data
 download_data : $(PDFS)
-data/raw/%.pdf : data/raw/links.txt
-	cat $^ | grep $* | xargs curl -l -o $@
+data/raw/%.pdf : code/download_data.sh data/raw/links.txt
+	sh $^ $* $@
 
 ## ocr_data : Use OCR to process the pdfs, saving as csv.
 .PHONY : ocr_data
