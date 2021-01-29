@@ -22,7 +22,7 @@ get_collection_from_pdf_name <- function(str) {
 ## load path to pdf
 if (interactive()) {
   args <- list(
-    pdf_in = "../data/raw/cald/cald_01_01-12-1947.pdf"
+    pdf_in = "data/raw/test_pdf.pdf"
   )
 } else {
   args <- arg_parser("OCR") %>%
@@ -30,8 +30,7 @@ if (interactive()) {
       "pdf_in",
       help = "Path to PDF",
       type = "character"
-    ) %>%
-    add_argument(
+    ) %>% add_argument(
       "csv_out",
       help = "Path to CSV outfile",
       type = "character"
@@ -42,10 +41,11 @@ if (interactive()) {
 ## run ocr
 ocr_out <- ocr(args$pdf_in, engine = tesseract("eng"))
 
-## remove pngs
-for (i in 1:length(test)) {
-  file.remove(paste0(args$pdf_in,"_",i,".png"))
-}
+## remove garbage pngs
+to_remove_base <- fs::path_file(args$pdf_in) %>%
+  tools::file_path_sans_ext()
+files_to_remove <- list.files()[str_detect(list.files(), to_remove_base)]
+file.remove(files_to_remove)
 
 ## convert to table, then save to disk
 tibble(
