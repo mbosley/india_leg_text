@@ -16,6 +16,7 @@ data/raw/links.txt : code/scrape_links.jl
 download_data : $(PDFS)
 data/raw/%.pdf : code/download_data.sh data/raw/links.txt
 	$(GET_DATA)
+	touch $@
 
 ## ocr_data : Use OCR to process the pdfs, saving as csv.
 .PHONY : ocr_data
