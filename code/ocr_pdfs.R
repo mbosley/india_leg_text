@@ -7,7 +7,7 @@ get_date_from_pdf_name <- function(str) {
   str %>%
     str_remove(".pdf") %>%
     str_remove(".*_") %>%
-    as.Date(format = "%d-%m-%y") %>%
+    as.Date(format = "%d-%m-%Y") %>%
     return()
 }
 
