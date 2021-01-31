@@ -50,6 +50,7 @@ file.remove(files_to_remove)
 ## convert to table, then save to disk
 tibble(
   collection = get_collection_from_pdf_name(args$pdf_in),
+  pdf_filename = fs::path_file(args$pdf_in),
   date = get_date_from_pdf_name(args$pdf_in),
   body = ocr_out
 ) %>%
