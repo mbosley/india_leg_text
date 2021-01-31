@@ -29,13 +29,14 @@ SLURM_FLAGS = --ntasks 1 --cpus-per-task 1 --partition standard \
 	--mem 5g --time 06:00:00
 
 GET_DATA_LOCAL =  sh $^ $* $@
-GET_DATA_SLURM = sbatch $(SLURM_FLAGS) --wrap "$(GET_DATA_LOCAL)" --job-name dl-$@
+GET_DATA_SLURM = sbatch $(SLURM_FLAGS) --wrap "$(GET_DATA_LOCAL)" --job-name dl-$@ --output pdfdown_out.log
 
 OCR_LOCAL = Rscript $^ $@
-OCR_SLURM = sbatch $(SLURM_FLAGS) --wrap "singularity exec ../../Rpoppler.simg $(OCR_LOCAL)" --job-name ocr-$@ --output out.log
+OCR_SLURM = sbatch $(SLURM_FLAGS) --wrap "singularity exec ../../Rpoppler.simg $(OCR_LOCAL)" --job-name ocr-$@ --output ocr_out.log
 
 ifeq ($(EXEC_TYPE),cluster)
-	GET_DATA = $(GET_DATA_SLURM)
+	#GET_DATA = $(GET_DATA_SLURM) # downloading in slurm jobs was buggy, so I just used the had node to do it in parallel
+	GET_DATA = $(GET_DATA_LOCAL)
 	OCR = $(OCR_SLURM)
 else
 	GET_DATA = $(GET_DATA_LOCAL)
