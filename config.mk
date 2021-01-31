@@ -32,7 +32,7 @@ GET_DATA_LOCAL =  sh $^ $* $@
 GET_DATA_SLURM = sbatch $(SLURM_FLAGS) --wrap "$(GET_DATA_LOCAL)" --job-name dl-$@
 
 OCR_LOCAL = Rscript $^ $@
-OCR_SLURM = sbatch $(SLURM_FLAGS) --wrap "$(OCR_LOCAL)" --job-name ocr-$@
+OCR_SLURM = sbatch $(SLURM_FLAGS) --wrap "singularity exec ../../Rpoppler.simg $(OCR_LOCAL)" --job-name ocr-$@ --output out.log
 
 ifeq ($(EXEC_TYPE),cluster)
 	GET_DATA = $(GET_DATA_SLURM)
