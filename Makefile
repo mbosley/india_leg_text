@@ -23,6 +23,12 @@ ocr_data : $(CSVS)
 data/raw/%.csv : code/ocr_pdfs.R data/raw/%.pdf
 	$(OCR)
 
+## combine_data : Combines all CSVs into a single CSV
+.PHONY : combine_data
+combine_data : data/clean/speeches_all.csv
+data/clean/speeches_all.csv : $(CSVS)
+	awk 'NR==1; FNR==1{next} 1' $^ > $@
+
 ## clean : Remove all data files generated from makefile.
 .PHONY : clean
 clean :
