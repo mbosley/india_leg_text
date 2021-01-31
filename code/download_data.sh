@@ -16,7 +16,7 @@ echo "Target Location: $3"
 
 while [ $success = 0 ]
 do
-    cat "$1" | grep "$2" | xargs wget -O "$3"
+    cat "$1" | grep "$2" | xargs wget --timeout=1 --waitretry=1 --tries=3 -O "$3"
     file_size=$(wc -c <"$3")
     if [ "$i" = $max_attempts ]; then
         echo "Maximum attempts reached, stopping"
