@@ -1,11 +1,21 @@
 # specify which collections to download
 COLLECTIONS = "clad|ilcd|cosd"
 
+# specify which years to look at
+YEAR_START = 1916
+YEAR_END = 1925
+
 # specify number of threads to use locally for webscraping
 NUM_THREADS = 10
 
+# process years for grep
+YEARS_RAW := $(shell seq $(YEAR_START) 1 $(YEAR_END))
+EMPTY :=
+SPACE := $(EMPTY) $(EMPTY)
+YEARS = $(subst $(SPACE),'|',$(YEARS_RAW))
+
 # filename generation
-PDFS := $(addprefix data/raw/,$(notdir $(shell cat data/raw/links.txt | grep -E $(COLLECTIONS) | head)))
+PDFS := $(addprefix data/raw/,$(notdir $(shell cat data/raw/links.txt | grep -E $(COLLECTIONS) | grep -E $(YEARS))))
 CSVS := $(subst .pdf,.csv,$(PDFS))
 
 # execution type; 'cluster' for cluster, 'local' for local
