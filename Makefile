@@ -12,8 +12,8 @@ data/raw/links.txt : code/scrape_links.jl
 	julia -t $(NUM_THREADS) $^
 
 ## download_data : Using the links, download the pdfs
-.PHONY : download_data
-download_data : $(PDFS)
+.PHONY : download_pdfs
+download_pdfs : $(PDFS)
 data/raw/%.pdf : code/download_data.sh data/raw/links.txt
 	$(GET_DATA)
 
