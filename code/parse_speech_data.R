@@ -25,18 +25,18 @@ get_page_head <- function(speeches_all) {
     return()
 }
 
-get_debate_pages <- function(speeches_sub, debug_print = TRUE) {
+get_debate_pages <- function(speeches_sub, debug = TRUE) {
   #' Takes a subset of `speeches_all` for a single day and strips
   #' away all pages except for those thatcontain debates.
 
   ## get collection id
   collection_id <- speeches_sub[["collection"]][1]
   if (collection_id == "clad") {
-    speech_keyword <- "LEGISLATIVE"
+    speech_keywords <- "LEGISLATIVE"
   } else if (collection_id == "cosd") {
-    speech_keyword <- "COUNCIL"
+    speech_keywords <- "COUNCIL"
   } else if (collection_id == "ilcd") {
-    speech_keyword <- "LEGISLATIVE COUNCIL"
+    speech_keywords <- c("QUESTIONS", "ANSWERS", "QUESTIONS AND ANSWERS")
   }
 
   ## remove first page
