@@ -125,3 +125,11 @@ debate_speeches_collapsed <- debate_speeches %>%
 
 ## 2. Parse concatenated data
 ## THIS IS WHAT I NEED TO DO NEXT
+## Looks like I need to trim the title text off each page.
+## Then, for CLAD collection, the important signifiers are:
+##
+## 1): Topic in upper case followed by colon (e.g. "ELECTION OF DEPUTY PRESIDENT")
+## with two new lines (\n\n) before and after signifies new topic.
+##
+## 2): Name in normal case follwed by colon (e.g. Mr. Sachchidananda Sinha:)
+## signifies new speaker.
