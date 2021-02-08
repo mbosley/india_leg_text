@@ -45,8 +45,7 @@ get_debate_pages <- function(speeches_sub, debug_print = TRUE) {
   ## gets index value where CONTENTS starts
   contents_ind <- speeches_sub %>%
     pull(body) %>%
-    agrep("CONTENTS", .) %>% ## agrep fuzzy matches
-    first()
+    fuzzy_match_keywords("CONTENTS")
 
   ## if CONTENTS exists, deletes up to that point
   if (!is.na(contents_ind)) {
@@ -56,35 +55,42 @@ get_debate_pages <- function(speeches_sub, debug_print = TRUE) {
   ## gets index value where speeches starts
   first_speech_ind <- speeches_sub %>%
     pull(body) %>%
-    agrep(speech_keyword, .) %>% ## agrep fuzzy matches
-    first()
+    fuzzy_match_keywords(speech_keywords)
 
   ## gets index value where INDEX starts
   first_index_ind <- speeches_sub %>%
     pull(body) %>%
-    agrep("INDEX TO ", .) %>% ## agrep fuzzy matches
-    first()
+    fuzzy_match_keywords("INDEX TO ")
 
-  if (debug_print) {
+  if (debug) {
     print(speeches_sub)
     cat("contents_index:", contents_ind, "\n")
     cat("speech_index:", first_speech_ind, "\n")
     cat("index_index:", first_index_ind, "\n")
+
+    if (is.na(first_speech_ind)) {
+      browser()
+    }
   }
 
-
-  if (is.na(first_leg_ind)) {
-    browser()
-  }
 
   ## If there is an INDEX, pulls pages between start of
   ## LEGISLATIVE and start of INDEX, otherwise pulls everything
   ## after the start of LEGISLATIVE
   if (is.na(first_index_ind)) {
-    return(speeches_sub[(first_leg_ind):nrow(speeches_sub), ])
+    return(speeches_sub[(first_speech_ind):nrow(speeches_sub), ])
   } else {
-    return(speeches_sub[(first_leg_ind):(first_index_ind - 1), ])
+    return(speeches_sub[(first_speech_ind):(first_index_ind - 1), ])
   }
+
+}
+
+fuzzy_match_keywords <- function(body_vec, keywords_vec) {
+  #' tries fuzzy matching across a vector of keywords
+  fuzzy_ind_vec <- unlist(map(keywords_vec, function (keyword) agrep(keyword, body_vec)))
+  first_ind <- ifelse(length(fuzzy_ind_vec) != 0, min(fuzzy_ind_vec), NA)
+
+  return(first_ind[1])
 
 }
 
