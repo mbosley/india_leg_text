@@ -30,6 +30,12 @@ combine_data : data/clean/speeches_all.csv
 data/clean/speeches_all.csv : $(CSVS)
 	awk 'NR==1; FNR==1{next} 1' $^ > $@
 
+## download_google : Downloads data from google drive
+.PHONY : download_google
+download_google : data/raw/speeches_google.csv
+data/raw/speeches_google.csv :
+	gdown --id 1K-zod1ZnNf0eXi68x8vaaoVL34SAQ1KZ --output $@
+
 ## clean : Remove all data files generated from makefile.
 .PHONY : clean
 clean :
