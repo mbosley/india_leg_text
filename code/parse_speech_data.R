@@ -122,6 +122,7 @@ debate_speeches <- speeches_all %>%
 debate_speeches_collapsed <- debate_speeches %>%
   group_by(collection, date, pdf_filename) %>%
   summarize(body = paste(body, collapse = ''))
+  mutate(body = str_remove(body, "\\A.*")) %>% # removes first line from page
 
 ## 2. Parse concatenated data
 ## THIS IS WHAT I NEED TO DO NEXT
