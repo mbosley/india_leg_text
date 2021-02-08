@@ -23,7 +23,8 @@ ocr_data : $(CSVS)
 data/raw/%.csv : code/ocr_pdfs.R data/raw/%.pdf
 	$(OCR)
 
-## combine_data : Combines all CSVs into a single CSV
+## combine_data : Combines all CSVs into a single CSV.
+## This file gets uploaded to the google drive.
 .PHONY : combine_data
 combine_data : data/clean/speeches_all.csv
 data/clean/speeches_all.csv : $(CSVS)
