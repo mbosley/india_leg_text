@@ -111,9 +111,12 @@ speeches_all <- read_csv("../data/raw/speeches_google.csv")
 
 ## split data by date, then apply get_debate_pages()
 ## function to get only the debate pages
+no_cores <- future::availableCores() - 1
+future::plan(multicore, workers = no_cores)
+
 debate_speeches <- speeches_all %>%
   split(.$pdf_filename) %>%
-  purrr::map_df(get_debate_pages)
+  furrr::future_map_dfr(get_debate_pages, .progress = TRUE)
 
 ## this code snippet efficiently concatenates speeches by group
 debate_speeches_collapsed <- debate_speeches %>%
