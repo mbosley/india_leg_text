@@ -25,7 +25,7 @@ get_page_head <- function(speeches_all) {
     return()
 }
 
-get_debate_pages <- function(speeches_sub, debug = TRUE) {
+get_debate_pages <- function(speeches_sub, debug = FALSE) {
   #' Takes a subset of `speeches_all` for a single day and strips
   #' away all pages except for those thatcontain debates.
 
