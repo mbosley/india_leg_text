@@ -36,6 +36,12 @@ download_google : data/raw/speeches_google.csv
 data/raw/speeches_google.csv :
 	gdown --id 1K-zod1ZnNf0eXi68x8vaaoVL34SAQ1KZ --output $@
 
+## clean_data : Parses the data into individual speeches, topics, etc.
+.PHONY : clean_data
+clean_data: data/clean/speeches_clean.csv
+data/clean/speeches_clean.csv : code/parse_speech_data.R data/raw/speeches_google.csv
+	$<
+
 ## clean : Remove all data files generated from makefile.
 .PHONY : clean
 clean :
