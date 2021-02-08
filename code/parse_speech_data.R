@@ -36,7 +36,12 @@ get_debate_pages <- function(speeches_sub, debug = TRUE) {
   } else if (collection_id == "cosd") {
     speech_keywords <- "COUNCIL"
   } else if (collection_id == "ilcd") {
-    speech_keywords <- c("QUESTIONS", "ANSWERS", "QUESTIONS AND ANSWERS")
+    speech_keywords <- c(
+      "QUESTIONS",
+      "ANSWERS",
+      "QUESTIONS AND ANSWERS",
+      "PROCEEDINGS OF"
+    )
   }
 
   ## remove first page
