@@ -94,8 +94,9 @@ library(tidyverse)
 
 ## 1. Get relevant pages, and concatenate by collection day
 
-## load data (download from google drive to relevant folder)
-speeches_all <- read_csv("../data/raw/speeches_all.csv")
+## load data (download from google drive to relevant folder;
+## use the Makefile if you want.)
+speeches_all <- read_csv("../data/raw/speeches_google.csv")
 
 ## split data by date, then apply get_debate_pages()
 ## function to get only the debate pages
