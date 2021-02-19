@@ -167,3 +167,18 @@ clad_speeches_split <- clad_speeches_split %>%
     speaker = str_extract(speeches, "^.{1,40}(?=:)"),
     speeches = str_remove(speeches, "^.{1,40}(?=:)")
   )
+
+## now do the same for cosd collection
+cosd_speeches_split <- debate_speeches_collapsed %>%
+  filter(collection == "cosd") %>%
+  mutate(
+    speeches = str_extract_all(
+      body,
+      regex(
+        "(^.{1,40}:)([\\s\\S]+?)(?=(\\n{2}^.{1,40}:)|\\Z)",
+        multiline = TRUE
+      )
+    )
+  ) %>%
+  select(-body) %>%
+  unnest_longer(speeches)
