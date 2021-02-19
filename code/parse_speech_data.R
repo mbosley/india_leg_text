@@ -11,7 +11,8 @@
 ## 1. use page structure to 'label' what's going on in each page DONE
 ## 2. use this information to pull the types of pages we want DONE
 ## 3. concatenate the extracted subtype DONE
-## 4. parse speakers and topics TODO
+## 4. parse speakers DONE
+## 5. parse topics TODO
 
 ##### FUNCTIONS #####
 
@@ -78,7 +79,6 @@ get_debate_pages <- function(speeches_sub, debug = FALSE) {
     }
   }
 
-
   ## If there is an INDEX, pulls pages between start of
   ## LEGISLATIVE and start of INDEX, otherwise pulls everything
   ## after the start of LEGISLATIVE
@@ -97,6 +97,30 @@ fuzzy_match_keywords <- function(body_vec, keywords_vec) {
 
   return(first_ind[1])
 
+}
+
+parse_speeches <- function(debate_speeches_collapsed, regex_long,
+                           regex_short, collection_str) {
+  #' parses speeches.
+
+  debate_speeches_collapsed %>%
+    ## filter out the specifieed collection, then parse the speeches
+    filter(collection == collection_str) %>%
+    mutate(
+      speeches = str_extract_all(
+        body, regex(parsing_regex, multiline = TRUE)
+      )
+    ) %>%
+    select(-body) %>%
+    unnest_longer(speeches) %>%
+    mutate(
+      ## extract speaker from each speech
+      ## an explanation of the regex:
+      ## - (^.(1,60):) looks for the speaker name
+      speaker = str_extract(speeches, regex_short),
+      speeches = str_remove(speeches, regex_short)
+    ) %>%
+    return()
 }
 
 ##### IMPLEMENTATION #####
@@ -121,7 +145,7 @@ debate_speeches <- speeches_all %>%
 ## this code snippet efficiently concatenates speeches
 ## by group and does some other cleaning
 debate_speeches_collapsed <- debate_speeches %>%
-  # removes lines with less than 10 characters, but preserves empty lines
+  # removes lines with less than 15 characters, but preserves empty lines
   mutate(
     body = str_remove_all(
       body, regex("^.{1,15}((\\n)|$)", multiline = TRUE)
@@ -137,48 +161,49 @@ debate_speeches_collapsed <- debate_speeches %>%
 
 ## 2. Parse concatenated data
 
-## (messily) split the clad debates into individual speeches
+## split the clad debates into individual speeches
 ## an explanation of the regex:
-## - (^.(1,40):) looks for the initial match of the speaker name
+## - (^.(1,60):) looks for the initial match of the speaker name
 ## - ([\\s\\S]+?) looks for all text and line breaks until the next speaker
-## -  looks for the next speaker, and breaks the match right before
-## - (?=(\\n{2}^.{1,40}:)|\\Z) looks for a new speaker preceded by
-## two new lines, or alternatively the end of the string
+## - (?=(\\n{2}^.{1,60}:)|\\Z) is a positive lookahead looks for a new
+##   and ensures that the next speaker is preceded by
+##   two new lines, or alternatively, the end of the string is reached.
+## - (?!\\n{2}.+:.*\\n{2}) is a negative lookahead that ensures that
+##   there is not a double line break after the identified next speaker
+##   chunk, which indicates that it is not actually as speaker.
+parsing_regex <- "(^.{1,60}:)([\\s\\S]+?)(?=(\\n{2}^.{1,60}:)|\\Z)(?!\\n{2}.+:.*\\n{2})"
+clad_speeches <- parse_speeches(
+  debate_speeches_collapsed,
+  regex_long = parsing_regex,
+  regex_short = "^.{1,60}(?=:)",
+  collection_str = "clad"
+)
 
-clad_speeches_split <- debate_speeches_collapsed %>%
-  filter(collection == "clad") %>%
-  mutate(
-    speeches = str_extract_all(
-      body,
-      regex(
-        "(^.{1,40}:)([\\s\\S]+?)(?=(\\n{2}^.{1,40}:)|\\Z)",
-        multiline = TRUE
-      )
-    )
-  ) %>%
-  select(-body) %>%
-  unnest_longer(speeches)
+## now do the same for cosd collection, which thankfully
+## has the same structure as the clad collection
 
-## extract speaker from each speech
-## an explanation of the regex:
-## - (^.(1,40):) looks for the speaker name
-clad_speeches_split <- clad_speeches_split %>%
-  mutate(
-    speaker = str_extract(speeches, "^.{1,40}(?=:)"),
-    speeches = str_remove(speeches, "^.{1,40}(?=:)")
-  )
+cosd_speeches <- parse_speeches(
+  debate_speeches_collapsed,
+  regex_long = parsing_regex,
+  regex_short = "^.{1,60}(?=:)",
+  collection_str = "cosd"
+)
+## now do the same for ilcd collection, which unfortunately
+## is structured different from the clad and cosd collections,
+## and as a result needs a different regex
+##
+## regex explanation:
+## - (^.{1,60}:(—|-){1,2}) looks for the speaker
+## - ([\\s\\S]+?) looks for the speech
+## - (?=(\\n^.{1,60}:(—|-){1,2})|\\Z) looks for the next speaker
+ilcd_regex <- "(^.{1,60}:(—|-){1,2})([\\s\\S]+?)(?=(\\n^.{1,60}:(—|-){1,2})|\\Z)"
+ilcd_speeches <- parse_speeches(
+  debate_speeches_collapsed,
+  regex_long = ilcd_regex,
+  regex_short = "^.{1,60}(?=:(—|-){1,2})",
+  collection_str = "ilcd"
+)
 
-## now do the same for cosd collection
-cosd_speeches_split <- debate_speeches_collapsed %>%
-  filter(collection == "cosd") %>%
-  mutate(
-    speeches = str_extract_all(
-      body,
-      regex(
-        "(^.{1,40}:)([\\s\\S]+?)(?=(\\n{2}^.{1,40}:)|\\Z)",
-        multiline = TRUE
-      )
-    )
-  ) %>%
-  select(-body) %>%
-  unnest_longer(speeches)
+## write to disk in clean data folder
+bind_rows(clad_speeches, cosd_speeches, ilcd_speeches) %>%
+  write_csv("../data/clean/clean_speech_data.csv")
