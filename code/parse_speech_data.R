@@ -124,7 +124,7 @@ debate_speeches_collapsed <- debate_speeches %>%
   # removes lines with less than 10 characters, but preserves empty lines
   mutate(
     body = str_remove_all(
-      body, regex("^.{0,15}((\\n)|$)", multiline = TRUE)
+      body, regex("^.{1,15}((\\n)|$)", multiline = TRUE)
     )
   ) %>%
   # cuts the first line from each page and imputes as page topic
