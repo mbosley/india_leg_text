@@ -38,7 +38,7 @@ data/raw/speeches_google.csv :
 
 ## clean_data : Parses the data into individual speeches, topics, etc.
 .PHONY : clean_data
-clean_data: data/clean/speeches_clean.csv
+clean_data: data/clean/clean_speech_data.csv
 data/clean/speeches_clean.csv : code/parse_speech_data.R data/raw/speeches_google.csv
 	$<
 
