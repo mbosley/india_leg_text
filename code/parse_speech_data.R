@@ -141,12 +141,19 @@ debate_speeches_collapsed <- debate_speeches %>%
 ## an explanation of the regex:
 ## - (^.(1,40):) looks for the initial match of the speaker name
 ## - ([\\s\\S]+?) looks for all text and line breaks until the next speaker
-## - (?=^.{1,40}:) looks for the next speaker, and breaks the match right before
+## -  looks for the next speaker, and breaks the match right before
+## - (?=(\\n{2}^.{1,40}:)|\\Z) looks for a new speaker preceded by
+## two new lines, or alternatively the end of the string
+
 clad_speeches_split <- debate_speeches_collapsed %>%
   filter(collection == "clad") %>%
   mutate(
     speeches = str_extract_all(
-      body, regex("(^.{1,40}:)([\\s\\S]+?)(?=^.{1,40}:)", multiline = TRUE)
+      body,
+      regex(
+        "(^.{1,40}:)([\\s\\S]+?)(?=(\\n{2}^.{1,40}:)|\\Z)",
+        multiline = TRUE
+      )
     )
   ) %>%
   select(-body) %>%
