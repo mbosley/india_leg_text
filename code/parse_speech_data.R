@@ -121,10 +121,19 @@ debate_speeches <- speeches_all %>%
 ## this code snippet efficiently concatenates speeches
 ## by group and does some other cleaning
 debate_speeches_collapsed <- debate_speeches %>%
-  mutate(body = str_remove(body, "\\A.*")) %>% # removes first line from page
-  mutate(body = str_remove_all(body, "\\n(.{1,10}\\n)")) %>% # removes lines under 10 chars long
+  # removes lines with less than 10 characters, but preserves empty lines
+  mutate(
+    body = str_remove_all(
+      body, regex("^.{1,15}((\\n)|$)", multiline = TRUE)
+    )
+  ) %>%
+  # cuts the first line from each page and imputes as page topic
+  mutate(
+    page_topic = str_extract(body, "\\A.*\\n+"),
+    body = str_remove(body, "\\A.*\\n+")
+  ) %>%
   group_by(collection, date, pdf_filename) %>% # groups by relevant variables
-  summarize(body = paste(body, collapse = '')) # concatenates by grouped vars
+  summarize(body = paste(body, collapse = "")) # concatenates by grouped vars
 
 ## 2. Parse concatenated data
 ## THIS IS WHAT I NEED TO DO NEXT
