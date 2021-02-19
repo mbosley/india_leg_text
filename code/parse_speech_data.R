@@ -124,7 +124,7 @@ debate_speeches_collapsed <- debate_speeches %>%
   # removes lines with less than 10 characters, but preserves empty lines
   mutate(
     body = str_remove_all(
-      body, regex("^.{1,15}((\\n)|$)", multiline = TRUE)
+      body, regex("^.{0,15}((\\n)|$)", multiline = TRUE)
     )
   ) %>%
   # cuts the first line from each page and imputes as page topic
@@ -136,12 +136,27 @@ debate_speeches_collapsed <- debate_speeches %>%
   summarize(body = paste(body, collapse = "")) # concatenates by grouped vars
 
 ## 2. Parse concatenated data
-## THIS IS WHAT I NEED TO DO NEXT
-## Looks like I need to trim the title text off each page.
-## Then, for CLAD collection, the important signifiers are:
-##
-## 1): Topic in upper case followed by colon (e.g. "ELECTION OF DEPUTY PRESIDENT")
-## with two new lines (\n\n) before and after signifies new topic.
-##
-## 2): Name in normal case follwed by colon (e.g. Mr. Sachchidananda Sinha:)
-## signifies new speaker.
+
+## (messily) split the clad debates into individual speeches
+## an explanation of the regex:
+## - (^.(1,40):) looks for the initial match of the speaker name
+## - ([\\s\\S]+?) looks for all text and line breaks until the next speaker
+## - (?=^.+:) looks for the next speaker, and breaks the match right before
+clad_speeches_split <- debate_speeches_collapsed %>%
+  filter(collection == "clad") %>%
+  mutate(
+    speeches = str_extract_all(
+      body, regex("(^.{1,40}:)([\\s\\S]+?)(?=^.+:)", multiline = TRUE)
+    )
+  ) %>%
+  select(-body) %>%
+  unnest_longer(speeches)
+
+## extract speaker from each speech
+## an explanation of the regex:
+## - (^.(1,40):) looks for the speaker name
+clad_speeches_split <- clad_speeches_split %>%
+  mutate(
+    speaker = str_extract(speeches, "^.{1,40}(?=:)"),
+    speeches = str_remove(speeches, "^.{1,40}(?=:)")
+  )
