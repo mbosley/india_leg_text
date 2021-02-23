@@ -1,0 +1,1 @@
+This folder contains electoral returns from British India elections (including British Burma) from 1920 to 1937.
