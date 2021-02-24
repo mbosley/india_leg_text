@@ -6,7 +6,6 @@
 ###############################################################################
 
 ##### NOTES #####
-
 ## MB: processing steps:
 ## 1. use page structure to 'label' what's going on in each page DONE
 ## 2. use this information to pull the types of pages we want DONE
@@ -131,7 +130,7 @@ library(tidyverse)
 
 ## load data (download from google drive to relevant folder;
 ## use the Makefile if you want.)
-speeches_all <- read_csv("../data/raw/speeches_google.csv")
+speeches_all <- read_csv("data/raw/speeches_google.csv")
 
 ## split data by date, then apply get_debate_pages()
 ## function to get only the debate pages
@@ -206,4 +205,4 @@ ilcd_speeches <- parse_speeches(
 
 ## write to disk in clean data folder
 bind_rows(clad_speeches, cosd_speeches, ilcd_speeches) %>%
-  write_csv("../data/clean/clean_speech_data.csv")
+  write_csv("data/clean/clean_speech_data.csv")

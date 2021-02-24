@@ -38,9 +38,11 @@ data/raw/speeches_google.csv :
 
 ## clean_data : Parses the data into individual speeches, topics, etc.
 .PHONY : clean_data
-clean_data: data/clean/clean_speech_data.csv
-data/clean/speeches_clean.csv : code/parse_speech_data.R data/raw/speeches_google.csv
-	$<
+clean_data: data/clean/merged_speech_data.csv
+data/clean/clean_speech_data.csv : code/parse_speech_data.R data/raw/speeches_google.csv
+	Rscript $<
+data/clean/merged_speech_data.csv : code/merge_member_data.R data/clean/clean_speech_data.csv
+	Rscript $<
 
 ## clean : Remove all data files generated from makefile.
 .PHONY : clean
