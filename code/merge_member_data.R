@@ -71,7 +71,7 @@ clad_out <- output_tbl %>%
   group_by(speech_id) %>%
   filter(distance == min(distance)) %>%
   select(speech_id, institution = institution.x, date,
-         pdf_filename, speaker = speaker.x, speeches,
+         pdf_filename, speaker = speaker.y, speeches,
          elected, position, tenure) %>%
   ungroup() %>%
   write_csv("data/clean/merged_speech_data.csv")
