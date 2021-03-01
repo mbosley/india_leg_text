@@ -17,7 +17,7 @@ speeches = np.array(df['speeches'])
 elected = np.array(df['elected'])
 
 # Remove senators who make less than 24 speeches.
-min_speeches = 24
+min_speeches = 10
 unique_speaker, speaker_counts = np.unique(speaker, return_counts=True)
 absent_speakers = unique_speaker[np.where(speaker_counts < min_speeches)]
 absent_speaker_inds = [ind for ind, x in enumerate(speaker)
@@ -30,7 +30,8 @@ speaker_elected = np.array(
 
 # Create mapping between names and IDs.
 speaker_to_speaker_id = dict(
-    [(y.title(), x) for x, y in enumerate(sorted(set(speaker_elected)))])
+  [(y.title(), x) for x, y in enumerate(sorted(set(speaker_elected)))]
+)
 author_indices = np.array(
     [speaker_to_speaker_id[s.title()] for s in speaker_elected])
 author_map = np.array(list(speaker_to_speaker_id.keys()))
@@ -96,6 +97,8 @@ np.savetxt(os.path.join(save_dir, "author_map.txt"), author_map, fmt="%s")
 # `raw_documents.txt` contains all the documents we ended up using.
 raw_documents = [document.replace("\n", ' ').replace("\r", ' ')
                  for document in speeches[existing_speeches]]
-np.savetxt(os.path.join(save_dir, "raw_documents.txt"),
-           raw_documents,
-           fmt="%s")
+np.savetxt(
+  os.path.join(save_dir, "raw_documents.txt"),
+  raw_documents,
+  fmt="%s"
+)
