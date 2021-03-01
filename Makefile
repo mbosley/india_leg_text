@@ -4,6 +4,7 @@ include config.mk
 .PHONY : build_dir
 build_dir :
 	mkdir -p data/{raw,clean}
+	mkdir figs
 
 ## get_links : Get the complete set of pdf links from website.
 .PHONY : get_links
@@ -32,9 +33,11 @@ data/clean/speeches_all.csv : $(CSVS)
 
 ## download_google : Downloads data from google drive
 .PHONY : download_google
-download_google : data/raw/speeches_google.csv
+download_google : data/raw/speeches_google.csv data/clean/tbip_results.csv
 data/raw/speeches_google.csv :
 	gdown --id 1K-zod1ZnNf0eXi68x8vaaoVL34SAQ1KZ --output $@
+data/clean/tbip_results.csv :
+	gdown --id 14USSbJ1rlU5XhEQJuDCa1ezB8gawwpdk --output $@
 
 ## clean_data : Parses the data into individual speeches, topics, etc.
 .PHONY : clean_data
@@ -48,6 +51,12 @@ data/clean/merged_speech_data.csv : code/merge_member_data.R data/clean/clean_sp
 .PHONY : run_stm
 run_stm : code/run_stm.R data/clean/merged_speech_data.csv
 	Rscript $<
+
+## get_figs : Gets figures
+.PHONY :  get_figs
+get_figs :
+	Rscript descriptive_figs.R
+	Rscript tbip_figs.R
 
 ## clean : Remove all data files generated from makefile.
 .PHONY : clean
