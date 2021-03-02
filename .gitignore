@@ -11,3 +11,7 @@
 *.pdf.*
 /code/__pycache__/
 /data/clean/
+*.bbl
+*.bcf
+*.blg
+*.xml
