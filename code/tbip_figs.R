@@ -7,6 +7,7 @@
 
 library(tidyverse)
 library(ggridges)
+library(patchwork)
 
 ## load data
 speech_data <- read_csv("data/clean/merged_speech_data.csv") %>%
@@ -39,6 +40,10 @@ tbip_results <- read_csv("data/clean/tbip_results.csv") %>%
   left_join(speaker_position_data, by = c("speaker", "elected"))
 
 ## DESCRIPTIVE PLOTS ##
+speech_nums <- speech_data %>%
+  group_by(position) %>%
+  summarize(speech_nums = n()) %>%
+  pull(speech_nums)
 speaker_position_data %>%
   group_by(position) %>%
   summarize(`Number of Speakers` = n()) %>%
@@ -47,11 +52,12 @@ speaker_position_data %>%
     key = "att", value = "Number",
     "Number of Speakers", "Number of Speeches", -position
   ) %>%
-  rename(Type = position) %>%
+  rename(`Member Type` = position) %>%
   ggplot(aes(x = Number,
-             y = Type)) +
+             y = `Member Type`)) +
   geom_bar(width = .5, stat = "identity") +
   facet_wrap(vars(att), scales="free_x") +
+  theme_bw() +
   ggsave("figs/speech-speaker-prop.pdf")
 
 ## speech proportion
@@ -86,35 +92,58 @@ tbip_results %>%
   ggsave("figs/boxplot-separate.pdf")
 
 ## ridges plot by position
-tbip_results %>%
+ridge_sep <- tbip_results %>%
   drop_na() %>%
+  filter(position != "Unelected") %>%
   ggplot(
     aes(x = ideal_point,
         y = position)
   ) +
   geom_density_ridges(scale = 0.9) +
+  theme_bw() +
+  xlab("Ideal Point") +
+  theme(
+    axis.title.y = element_blank()
+  ) +
   ggsave("figs/ridgesplot-seperate.pdf")
 
 ## ridges plot by elected or not
-tbip_results %>%
+ridge_pooled <- tbip_results %>%
+  mutate(elected = ifelse(elected == 1, "Elected", "Appointed")) %>%
   drop_na() %>%
   ggplot(
     aes(x = ideal_point,
-        y = as.factor(elected))
+        y = elected)
   ) +
   geom_density_ridges(scale = 0.9) +
+  theme_bw() +
+  xlab("Ideal Point") +
+  theme(
+    axis.title.y = element_blank(),
+    axis.title.x = element_blank(),
+    axis.ticks.x = element_blank(),
+    axis.text.x = element_blank()
+  ) +
   ggsave("figs/ridgesplot-pooled.pdf")
+
+(ridge_pooled / ridge_sep) + ggsave("figs/ridges_combined.pdf")
 
 ## pooled distribution of ideal points
 tbip_results %>%
   drop_na() %>%
   ggplot(aes(x = ideal_point,
-             y = reorder(speaker, ideal_point),
-             color = position)) +
+             y = reorder(speaker, ideal_point))) +
   geom_vline(xintercept = 0, color = "gray30") +
   geom_point(size = 2) +
+  theme_bw() +
+  xlab("Ideal Point") +
+  ylab("Members of Legislative Assembly") +
+  facet_wrap(vars(position)) +
+  theme_bw() +
   theme(
     axis.text.y = element_blank(),
-    axis.ticks.y = element_blank()
+    axis.ticks.y = element_blank(),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank()
   ) +
   ggsave("figs/pointplot.pdf")
