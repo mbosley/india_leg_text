@@ -1,6 +1,7 @@
 library(argparser)
 library(tesseract)
 library(tidyverse)
+library(pdftools)
 
 ## functions
 get_date_from_pdf_name <- function(str) {
@@ -39,13 +40,18 @@ if (interactive()) {
 }
 
 ## run ocr
-ocr_out <- ocr(args$pdf_in, engine = tesseract("eng"))
+#page_num <- pdf_pagesize(args$pdf_in) %>% nrow()
+#base_file <- args$pdf_in %>%
+#  basename() %>%
+#  str_remove(".pdf")
+#temp_names <- paste0(tempdir(), "/", base_file, "-", 1:page_num, ".png")
+
+#pngfiles <- pdftools::pdf_convert(args$pdf_in, dpi = 500, filenames = temp_names)
+#ocr_out <- ocr(pngfiles, engine = tesseract("eng"))
+ocr_out <- pdf_ocr_text(args$pdf_in)
 
 ## remove garbage pngs
-to_remove_base <- fs::path_file(args$pdf_in) %>%
-  tools::file_path_sans_ext()
-files_to_remove <- list.files()[str_detect(list.files(), to_remove_base)]
-file.remove(files_to_remove)
+#unlink(pngfiles)
 
 ## convert to table, then save to disk
 tibble(
