@@ -2,8 +2,8 @@
 COLLECTIONS = "clad|ilcd|cosd"
 
 # specify which years to look at
-YEAR_START = 1916
-YEAR_END = 1925
+YEAR_START = 1919
+YEAR_END = 1940
 
 # specify number of threads to use locally for webscraping
 NUM_THREADS = 10
@@ -19,16 +19,16 @@ PDFS := $(addprefix data/raw/,$(notdir $(shell cat data/raw/links.txt | grep -E 
 CSVS := $(subst .pdf,.csv,$(PDFS))
 
 # execution type; 'cluster' for cluster, 'local' for local
-EXEC_TYPE = local
+EXEC_TYPE = cluster
 
 # slurm parameters
-SLURM_ACCOUNT = shiraito1
+SLURM_ACCOUNT = shiraito0
 SLURM_OUT = /home/%u/logs/%x-%j.log # x=job name, j=job id
 SLURM_FLAGS = --ntasks 1 --cpus-per-task 1 --partition standard \
 	--account $(SLURM_ACCOUNT) --output $(SLURM_OUT) \
-	--mem 5g --time 06:00:00
+	--mem 10g --time 06:00:00
 
-GET_DATA_LOCAL =  sh $^ $* $@
+GET_DATA_LOCAL =  sh $^ $* $@ --no-check-certificate
 GET_DATA_SLURM = sbatch $(SLURM_FLAGS) --wrap "$(GET_DATA_LOCAL)" --job-name dl-$@ --output pdfdown_out.log
 
 OCR_LOCAL = Rscript $^ $@
