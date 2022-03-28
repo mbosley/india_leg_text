@@ -1,5 +1,6 @@
 /paper/*.pdf
 /slides/*.pdf
+*.pdf
 *.csv
 *.DS_store
 *.png
