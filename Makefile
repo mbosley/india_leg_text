@@ -47,10 +47,19 @@ data/clean/clean_speech_data.csv : code/parse_speech_data.R data/raw/speeches_go
 data/clean/merged_speech_data.csv : code/merge_member_data.R data/clean/clean_speech_data.csv
 	Rscript $<
 
+## get_dfm :
+.PHONY : get_dfm
+get_dfm : data/clean/dfm_speeches.rds data/clean/dfm_days.rds
+data/clean/dfm.rds : code/get_dfm.R
+	Rscript $^
+
 ## run_stm : Runs structural topic model
 .PHONY : run_stm
-run_stm : code/run_stm.R data/clean/merged_speech_data.csv
-	Rscript $<
+run_stm : $(STM_OUT_DAYS) $(STM_OUT_SPEECHES)
+data/clean/stm_out_days_%.rds : code/run_stm_days.R data/clean/dfm_.rds
+	Rscript $^ --K $*
+data/clean/stm_out_speeches_%.rds : code/run_stm_speeches.R data/clean/dfm.rds
+	Rscript $^ --K $*
 
 ## get_figs : Gets figures
 .PHONY :  get_figs

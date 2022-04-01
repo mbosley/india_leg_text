@@ -29,6 +29,7 @@ get_debate_pages <- function(speeches_sub, debug = FALSE) {
   #' Takes a subset of `speeches_all` for a single day and strips
   #' away all pages except for those thatcontain debates.
 
+  print(paste0("Processing ", speeches_sub$pdf_filename[1], "..."))
   ## get collection id
   collection_id <- speeches_sub[["collection"]][1]
   if (collection_id == "clad") {
@@ -130,16 +131,35 @@ library(tidyverse)
 
 ## load data (download from google drive to relevant folder;
 ## use the Makefile if you want.)
-speeches_all <- read_csv("data/raw/speeches_google.csv")
+## speeches_all <- read_csv("data/raw/speeches_google.csv")
+speeches_all <- read_csv("data/clean/combined_speeches.csv")
+
+speeches_all <- speeches_all %>%
+  mutate(collection = case_when(
+           str_detect(collection, "clad") ~ "clad",
+           str_detect(collection, "cosd") ~ "cosd",
+           str_detect(collection, "ilcd") ~ "ilcd"
+         ))
+
+## speeches_all %>%
+##   group_by(date, collection) %>%
+##   count() %>%
+##   ggplot(aes(x = date, y = log(n), color = collection)) +
+##   geom_point()
 
 ## split data by date, then apply get_debate_pages()
 ## function to get only the debate pages
 no_cores <- future::availableCores() - 1
 future::plan("multicore", workers = no_cores)
 
+## speeches_all %>%
+##   filter(pdf_filename == speeches_all$pdf_filename[1]) %>%
+##   get_debate_pages()
+
 debate_speeches <- speeches_all %>%
   split(.$pdf_filename) %>%
-  furrr::future_map_dfr(get_debate_pages, .progress = TRUE)
+  ## furrr::future_map_dfr(get_debate_pages, .progress = TRUE)
+  map_dfr(get_debate_pages)
 
 ## this code snippet efficiently concatenates speeches
 ## by group and does some other cleaning

@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "india-legislative-text",
+  "private_key_id": "9fc7b2a042215c5733baa13a49cc622dacef696b",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQD3+Ip15w8DSWLL\nLUYruE9GgNWVr6nG66QJoQgXNzPcPkEGS9CPXCZE8kJjIrtSJs6h9K7nQBUjlOVI\ngDVv+ec1DHkdMPrkVAn1KzaCJ0Optck632HKHFLRKu+ww9/AiH7sSpdQ3DC/7JXV\nSZlK74F89Ip2CGSBkyOVj3ZPyW1VIrkWoY2DtVu9xj/0rVYZyYvBiqdLRpc6HriH\nijt6RYN2B5M3BygOH3x7I1KaDwTyQte2ibvXdeKmquCpvdnl8re2fyZwhUfP4Vl7\ns1QJvZQPMX3Oq/FvNG6BX5uRS9znSSJEyJVErvtpGDpqjZXZ0CcmGP/z+dvSxSAb\niN6UW461AgMBAAECggEABeaQqOiUJ2BeLPaJVm3+2O8k5fh1okmmMCJ4VlEWd1W1\n52fzcQ3gzUA0izZe3cAVp63yYYdZWWzoHdcLLnx0X4NJ+INbXQaQ7BgYpnU3u3ib\nbr61DYGqCNcsN/kZQHQfDRFjU2XB9Tc0g4xKTQmw+5+4EcH2Xkz5ikwNJS3mX6G1\nZxNqs8GjX6ONuGAC3/oeDUKfIPL3jWJmQK8ogj+PR1LDBGg9VwaAkMz4VMGi4BH6\nB/0Z+iRNaKJw1N+qj/Rn4V6dVTb9DG+yrJDRsbX8eYwgDx0aSU6WlrH8w0iasccI\nWwGQ3r8ZqoVbEW/ia5fVi+lvtry6BMdAHJXVCooYAQKBgQD9Ne1VtaFQCW/aspyt\nuGFU4rZkBCp3czL/14hwSdwl+f1wIHNDpmthFg3Om8AIlNL9Pz+6hyBo2OEuk5lj\nK6VfVGQpueCquWzehdm4BNBeL3vfliwCEdMvBER3oBdDLaNF9IbZ//FsPfed8qnV\nVWNRijGXb64XCblVGJoe+U+EAQKBgQD6s9ZRDnQOHwzgjOHAGlRDxtWDH15cSujT\ng18VkRZ2X41Sv16ATxsueB7EzCocgWlFQS2cpZEOSuYZneYtaaAGQquoHpUjyhUW\niUMzXYpwzNCvqfyLksA6mX4M/4I/3qCq+n+jaiw21UVJB4iBUjvkq79qdUkZpxqV\nxSMs3zs6tQKBgEHML54kEoT/zscfvsMNtI0gVJDs3DQqBUiiM1wqdUCRE6B9bjZY\nGnMiDfhwVJhmQ+V2+BJ6ZpuYL/uwcx1oDBMXlOea25zBjl7MnWTKK3MuF5xkI49u\nHliLXVdQjHrycwkMn7YqYgvklmG+2w8Kn0JjDLvzU2O9LSHFwNbnphgBAoGBAILs\nQcMIykDJpF7sE8TPuyu9/ajBS/TkxdwXoiNQJqvg0JvjBoX5SdelsWPSvzctuf0J\nwbkpmaweHzZHiHo0y/YZAS4F8prDIOoo+qgrdG3d+CmUmyeEltDDcdl14d5a9Ar2\nUIvVmYt1Kv6taXMnr9GGg6sj3u3/n1mRnwIC/hp1AoGBANmUVLFQoUSJ5CyK0srq\n/P4z8tD/Ume0wclKw7kZe6ieNoJ81T+yjJF4W3nwdt/5kMq5864WrY+HwKHiD8b8\nMaA9ieGdIN7AOZMQwMsn5AWQ3/1BHoIBomIMEhH24uJLsvx+g6wH0qM+NQpFubb1\no18YNmzGKlEpfpZgwHSOywAH\n-----END PRIVATE KEY-----\n",
+  "client_email": "my-r-service-account@india-legislative-text.iam.gserviceaccount.com",
+  "client_id": "110721880836923328725",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/my-r-service-account%40india-legislative-text.iam.gserviceaccount.com"
+}

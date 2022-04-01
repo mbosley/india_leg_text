@@ -8,6 +8,9 @@ YEAR_END = 1940
 # specify number of threads to use locally for webscraping
 NUM_THREADS = 10
 
+# specify number of clusters for stm
+K = 10 20 30 40 50 60 70
+
 # process years for grep
 YEARS_RAW := $(shell seq $(YEAR_START) 1 $(YEAR_END))
 EMPTY :=

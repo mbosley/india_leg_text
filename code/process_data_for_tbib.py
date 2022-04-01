@@ -9,7 +9,9 @@ from scipy import sparse
 from sklearn.feature_extraction.text import CountVectorizer
 
 # import data
-df = pd.read_csv("../data/clean/merged_speech_data.csv")
+df = pd.read_csv("../data/clean/educ_speech_data.csv")
+# df = pd.read_csv("../data/clean/merged_speech_data.csv")
+
 
 # Only look at senate speeches.
 speaker = np.array(df['speaker'])
